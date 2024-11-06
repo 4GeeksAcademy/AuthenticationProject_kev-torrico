@@ -1,3 +1,5 @@
+import Signup from "../component/signup";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
@@ -46,7 +48,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
+			},
+			signup: async (email, password) => {
+				try{
+					const resp = await fetch(process.env.BACKEND_URL + "/api/signup", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({
+							email: email,
+							password: password,
+						})
+					});
+
+					if (!resp.ok) {
+						const errorMessage = await resp.text();
+						console.error("Error during signup:", errorMessage)
+						return null;
+					}
+					const data = await resp.json();
+					
+					localStorage.setItem("token", data.token)
+					setStore({ user: data.user, token: data.token });
+					console.log("¡Tu usuario ha sido registrado!");
+					return data;
+				} catch (error) {
+					console.error("Error in the signup request:", error);
+					return null;
+				}
+			},
 		}
 	};
 };
