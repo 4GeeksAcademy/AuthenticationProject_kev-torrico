@@ -1,4 +1,5 @@
 import Signup from "../component/signup";
+import { Toaster, toast } from 'react-hot-toast';
 
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
@@ -69,9 +70,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 					const data = await resp.json();
 					
-					localStorage.setItem("token", data.token)
-					setStore({ user: data.user, token: data.token });
-					console.log("¡Tu usuario ha sido registrado!");
+					console.log("¡User registered!");
 					return data;
 				} catch (error) {
 					console.error("Error in the signup request:", error);

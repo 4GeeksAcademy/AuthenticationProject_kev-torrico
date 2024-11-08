@@ -2,17 +2,27 @@ import React, { useState, useContext, useEffect } from "react"; // Importa useSt
 import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.js";
 import { Link } from 'react-router-dom';
+import {toast} from "react-hot-toast";
 
 
 const Signup = () => {
     const { store, actions } = useContext(Context);
-    const [user, setUser] = useState({ email: "", password: ""});
+    const [user, setUser] = useState({});
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        await actions.signup(user.email, user.password);
-        navigate("/")
+        if (!user.email || !user.password){
+            toast.error("Both email and password are required.");
+            return;
+        }
+        const result = await actions.signup(user.email, user.password);
+        if (result) {
+            toast.success("User registered", { duration: 5000 });
+            navigate("/"); 
+        }else{
+            toast.error("Signup failed, try again")
+        }
     }
 
 
