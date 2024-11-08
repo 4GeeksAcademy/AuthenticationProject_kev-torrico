@@ -4,6 +4,8 @@ import { Toaster, toast } from 'react-hot-toast';
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			user: [],
+			token: localStorage.getItem("token") || null,
 			message: null,
 			demo: [
 				{
@@ -77,6 +79,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return null;
 				}
 			},
+			login: async (email, password) => {
+				const resp = await fetch(process.env.BACKEND_URL + "/api/login", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: email,
+						password: password
+					})
+				});
+				const data = await resp.json();
+
+				if (resp.ok) {
+					localStorage.setItem("token", data.token);
+					setStore({ token: data.token, user: data.user });
+					console.log("Login sucessful")
+					return data;
+				} else {
+					toast.error("Invalid Credentials");
+				}
+			},
+			logout: () => {
+				localStorage.removeItem("token");
+				setStore({
+				  token: null,
+				  user: {}
+				});
+				toast("👋🏼 Bye..");
+			  }
 		}
 	};
 };

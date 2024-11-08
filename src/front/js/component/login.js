@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import {toast} from "react-hot-toast";
 
 
-const Signup = () => {
+const Login = () => {
     const { store, actions } = useContext(Context);
     const [user, setUser] = useState({});
     const navigate = useNavigate();
@@ -16,12 +16,13 @@ const Signup = () => {
             toast.error("Both email and password are required.");
             return;
         }
-        const result = await actions.signup(user.email, user.password);
+        const result = await actions.login(user.email, user.password);
+
         if (result) {
-            toast.success("User registered", { duration: 5000 });
-            navigate("/login"); 
-        }else{
-            toast.error("Signup failed, try again")
+            toast.success("Login succesful!", { duration: 2000 });
+            navigate('/');
+        } else {
+            console.log("Login failed");  
         }
     }
 
@@ -30,7 +31,7 @@ const Signup = () => {
         <div className="PaginaPrincipal">
             <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh'}}>
                 <div className="shadow-lg p-4 bg-dark" style={{ width: '500px', borderRadius: "30px" }}>
-                    <h2 className="text-center text-white mb-2">Signup</h2>
+                    <h2 className="text-center text-white mb-2">Login</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-3">
                             <label className="form-label text-light">Email</label>
@@ -67,4 +68,4 @@ const Signup = () => {
     );
 };
 
-export default Signup;
+export default Login;

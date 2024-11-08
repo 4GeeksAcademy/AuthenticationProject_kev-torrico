@@ -12,6 +12,8 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_cors import CORS
 
+from flask_jwt_extended import JWTManager
+
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -20,6 +22,11 @@ static_file_dir = os.path.join(os.path.dirname(
 app = Flask(__name__)
 CORS(app)
 app.url_map.strict_slashes = False
+
+#JWT configuration
+app.config["JWT_SECRET_KEY"] = "proyecto-de-JWT_kevtorrico@4geeks.com_2024" 
+jwt = JWTManager(app) 
+
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
