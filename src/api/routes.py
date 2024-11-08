@@ -20,3 +20,26 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@api.route('/signup', methods=['POST'])
+def signup():
+    body = request.json
+    email = body.get("email", None)
+    password = body.get("password", None)
+
+    if email == None:
+        return jsonify({"msg": "Missing email"}), 401
+    if password == None:
+        return jsonify({"msg": "Missing password"}), 401
+    
+    user = User.query.filter_by(email=email).first()
+
+    if user!= None:
+        return jsonify({"msg" : "User has been already created!"}), 401
+    
+    new_user = User(email=email, password=password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({"user": new_user.serialize(),
+                    }),200
